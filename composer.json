@@ -1,0 +1,18 @@
+{
+  "config": {
+    "secure-http": true
+  },
+  "name": "porth/avalancesort",
+  "description": "Avalanchesort - test of algorithm with phpunit in compasion to quicksort ",
+  "license": "proprietary",
+  "require": {
+    "php": ">7.2.0 <7.3.99",
+    "phpunit/phpunit": "~8.5.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Porth\\Avalanchesort\\": "web/avalanchesort/Classes",
+      "Porth\\Avalanchesorttest\\": "web/avalanchesort/Tests"
+    }
+  }
+}
