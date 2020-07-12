@@ -1,9 +1,9 @@
 <?php
 
-namespace Porth\Avalanchesort\Sort;
+namespace Porthd\Avalanchesort\Sort;
 
-use Porth\Avalanchesort\Defs\DataListAvalancheSortInterface;
-use Porth\Avalanchesort\Defs\DataRangeInterface;
+use Porthd\Avalanchesort\Defs\DataListAvalancheSortInterface;
+use Porthd\Avalanchesort\Defs\DataRangeInterface;
 use UnexpectedValueException;
 
 

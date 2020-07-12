@@ -1,22 +1,22 @@
 <?php
 
-namespace Porth\Avalanchesort\Sort;
+namespace Porthd\Avalanchesort\Sort;
 
 use PHPUnit\Framework\TestCase;
-use Porth\Avalanchesort\Service\GenerateTestArrayTestService;
-use Porth\Avalanchesort\Storage\Additional\MapperList;
-use Porth\Avalanchesort\Storage\ArrayType\ArrayDataCompare;
-use Porth\Avalanchesort\Storage\ArrayType\ArrayIndexDataRange;
-use Porth\Avalanchesort\Storage\ArrayType\ArrayList;
-use Porth\Avalanchesort\Sort\AvalancheSort;
-use Porth\Avalanchesort\Sort\QuickSort;
+use Porthd\Avalanchesort\Service\GenerateTestArrayTestService;
+use Porthd\Avalanchesort\Storage\Additional\MapperList;
+use Porthd\Avalanchesort\Storage\ArrayType\ArrayDataCompare;
+use Porthd\Avalanchesort\Storage\ArrayType\ArrayIndexDataRange;
+use Porthd\Avalanchesort\Storage\ArrayType\ArrayList;
+use Porthd\Avalanchesort\Sort\AvalancheSort;
+use Porthd\Avalanchesort\Sort\QuickSort;
 
 class AvalancheSortArrayTest extends TestCase
 {
     protected const TEST_KEY = 'test';
 
     /**
-     * @var \Porth\Avalanchesort\Sort\AvalancheSort
+     * @var \Porthd\Avalanchesort\Sort\AvalancheSort
      */
     protected $avalanchesort;
 

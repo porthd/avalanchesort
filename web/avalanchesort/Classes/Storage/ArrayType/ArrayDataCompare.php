@@ -1,7 +1,7 @@
 <?php
-namespace Porth\Avalanchesort\Storage\ArrayType;
+namespace Porthd\Avalanchesort\Storage\ArrayType;
 
-use Porth\Avalanchesort\Defs\DataCompareInterface;
+use Porthd\Avalanchesort\Defs\DataCompareInterface;
 use UnexpectedValueException;
 
 /***

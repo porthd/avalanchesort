@@ -1,7 +1,7 @@
 <?php
-namespace Porth\Avalanchesort\Storage\ArrayType;
+namespace Porthd\Avalanchesort\Storage\ArrayType;
 
-use Porth\Avalanchesort\Defs\DataRangeInterface;
+use Porthd\Avalanchesort\Defs\DataRangeInterface;
 
 class ArrayIndexDataRange implements DataRangeInterface
 {

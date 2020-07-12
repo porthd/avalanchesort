@@ -2,7 +2,7 @@
   "config": {
     "secure-http": true
   },
-  "name": "porth/avalancesort",
+  "name": "porthd/avalancesort",
   "description": "Avalanchesort - test of algorithm with phpunit in compasion to quicksort ",
   "license": "proprietary",
   "require": {
@@ -11,8 +11,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Porth\\Avalanchesort\\": "web/avalanchesort/Classes",
-      "Porth\\Avalanchesorttest\\": "web/avalanchesort/Tests"
+      "Porthd\\Avalanchesort\\": "web/avalanchesort/Classes",
+      "Porthd\\Avalanchesorttest\\": "web/avalanchesort/Tests"
     }
   }
 }

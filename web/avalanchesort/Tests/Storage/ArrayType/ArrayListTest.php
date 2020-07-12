@@ -1,9 +1,9 @@
 <?php
-namespace Porth\Avalanchesort\Storage\ArrayType;
+namespace Porthd\Avalanchesort\Storage\ArrayType;
 
 use PHPUnit\Framework\TestCase;
-use Porth\Avalanchesort\Storage\ArrayType\ArrayDataCompare;
-use Porth\Avalanchesort\Storage\ArrayType\ArrayList;
+use Porthd\Avalanchesort\Storage\ArrayType\ArrayDataCompare;
+use Porthd\Avalanchesort\Storage\ArrayType\ArrayList;
 use stdClass;
 use UnexpectedValueException;
 

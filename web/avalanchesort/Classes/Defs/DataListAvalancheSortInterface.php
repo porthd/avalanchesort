@@ -1,6 +1,6 @@
 <?php
 
-namespace Porth\Avalanchesort\Defs;
+namespace Porthd\Avalanchesort\Defs;
 
 
 /***

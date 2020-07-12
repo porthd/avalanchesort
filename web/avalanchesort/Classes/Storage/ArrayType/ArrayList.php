@@ -1,11 +1,11 @@
 <?php
-namespace Porth\Avalanchesort\Storage\ArrayType;
+namespace Porthd\Avalanchesort\Storage\ArrayType;
 
 use http\Exception\UnexpectedValueException;
-use Porth\Avalanchesort\Defs\DataCompareInterface;
-use Porth\Avalanchesort\Defs\DataListAvalancheSortInterface;
-use Porth\Avalanchesort\Defs\DataListQuickSortInterface;
-use Porth\Avalanchesort\Defs\DataRangeInterface;
+use Porthd\Avalanchesort\Defs\DataCompareInterface;
+use Porthd\Avalanchesort\Defs\DataListAvalancheSortInterface;
+use Porthd\Avalanchesort\Defs\DataListQuickSortInterface;
+use Porthd\Avalanchesort\Defs\DataRangeInterface;
 use stdClass;
 
 /***

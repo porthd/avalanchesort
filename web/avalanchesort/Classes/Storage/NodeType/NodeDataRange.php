@@ -1,7 +1,7 @@
 <?php
-namespace Porth\Avalanchesort\Storage\NodeType;
+namespace Porthd\Avalanchesort\Storage\NodeType;
 
-use Porth\Avalanchesort\Defs\DataRangeInterface;
+use Porthd\Avalanchesort\Defs\DataRangeInterface;
 
 class NodeDataRange implements DataRangeInterface
 {

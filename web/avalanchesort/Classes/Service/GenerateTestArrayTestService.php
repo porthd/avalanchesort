@@ -1,6 +1,6 @@
 <?php
 
-namespace Porth\Avalanchesort\Service;
+namespace Porthd\Avalanchesort\Service;
 
 
 class GenerateTestArrayTestService

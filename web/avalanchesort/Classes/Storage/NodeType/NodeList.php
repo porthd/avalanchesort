@@ -1,9 +1,9 @@
 <?php
-namespace Porth\Avalanchesort\Storage\NodeType;
+namespace Porthd\Avalanchesort\Storage\NodeType;
 
-use Porth\Avalanchesort\Defs\DataCompareInterface;
-use Porth\Avalanchesort\Defs\DataListQuickSortInterface;
-use Porth\Avalanchesort\Defs\DataRangeInterface;
+use Porthd\Avalanchesort\Defs\DataCompareInterface;
+use Porthd\Avalanchesort\Defs\DataListQuickSortInterface;
+use Porthd\Avalanchesort\Defs\DataRangeInterface;
 use stdClass;
 use UnexpectedValueException;
 
