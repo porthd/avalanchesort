@@ -57,30 +57,31 @@ class AvalancheSortArrayTest extends TestCase
                 $infoLength
             );
         }
+        $infoLength = (int)$infoLength;
         $quickCounts = array_column($quickSortCounts, MapperList::KEY_COUNT);
         $avalancheCounts = array_column($avalancheSortCounts, MapperList::KEY_COUNT);
 
         $maxQuick = abs(max($quickCounts));
         $maxAvalanche = abs(max($avalancheCounts));
-        $digitsInNumber = (($maxQuick > $maxAvalanche) ?
+        $digitsInNumber = (int)(($maxQuick > $maxAvalanche) ?
             (ceil(log10($maxQuick + 1)) + 2) :
             (ceil(log10($maxAvalanche + 1)) + 2)
         );
         fwrite(STDERR, print_r($sortProblemMsg, TRUE));
         $result = '';
-        $result .= printf("%-3s.", '');
-        $result .= printf("%-" . $infoLength . "s.", 'type');
-        $result .= printf("%-" . $digitsInNumber . "s.", 'AS');
-        $result .= printf("%-" . $digitsInNumber . "s.", 'QS');
+        $result .= sprintf("%3s.", '');
+        $result .= sprintf("%" . $infoLength . "s ", 'type');
+        $result .= sprintf("%" . $digitsInNumber . "s ", 'QS');
+        $result .= sprintf("%" . $digitsInNumber . "s ", 'AS');
         $result .= "\n";
         fwrite(STDERR, print_r($result, TRUE));
         foreach ($name as $key => $value) {
             if ($flag[$key]) {
                 $result = '';
-                $result .= printf("%-3s.", $key);
-                $result .= printf("%-" . $infoLength . "s.", $value);
-                $result .= printf("%-" . $digitsInNumber . "s.", $quickCounts[$key]);
-                $result .= printf("%-" . $digitsInNumber . "s.", $avalancheCounts[$key]);
+                $result .= sprintf("%3s. ", $key);
+                $result .= sprintf("%" . $infoLength . "s ", $value);
+                $result .= sprintf("%" . $digitsInNumber . "s ", $quickCounts[$key]);
+                $result .= sprintf("%" . $digitsInNumber . "s ", $avalancheCounts[$key]);
                 $result .= "\n";
                 fwrite(STDERR, print_r($result, TRUE));
             }
@@ -95,15 +96,21 @@ class AvalancheSortArrayTest extends TestCase
     public function dataProviderTestStartSortMethodsGivenRandomFilledArrayThenSortIt()
     {
         foreach ([
-                     [20, true, 3.2],
-//                     [100, false, 3.2],
-//                     [100, true, 0.1],
-//                     [100, true, 1.2],
-//                     [100, true, 3.2],
-//                     [100, true, 10.2],
-//                     [500, true, 3.2],
-//                     [2000, true, 3.2],
-//                     [50000, true, 3.2],
+//                     [20, true, 3.2, '20 elements, normal randomisiert'],
+//                     [100, false, 3.2, '100 elements, normal randomized'],
+//                     [100, true, 0.1, '100 elements, easy randomized'],
+//                     [100, true, 1.2, '100 elements, simple randomized'],
+//                     [100, true, 3.2, '100 elements, normal randomized'],
+//                     [100, true, 10.2, '100 elements, heavy randomized'],
+//                     [500, true, 3.2, '500 elements, normal randomized'],
+                     [2000, true, 5.2, '2000 elements, big randomized'],
+                     [2000, true, 1.0, '2000 elements, simple randomized'],
+                     [2000, true, 0.5, '2000 elements, easy randomized'],
+                     [200, true, 5.2, '200 elements, big randomized'],
+                     [200, true, 1.0, '200 elements, simple randomized'],
+                     [200, true, 0.5, '200 elements, easy randomized'],
+                     [200, false, 0.01, '200 elements, sorted (because of recursion of Quicksort and nesting)'],
+//                     [10000, true, 3.2],
                  ]
                  as $myKey => $myParam
         ) {
@@ -124,12 +131,14 @@ class AvalancheSortArrayTest extends TestCase
             $firstKeyDistorded = array_key_first($distoredArray);
             $firstKeySorted = array_key_first($sortedArray);
             $n = ($myParam[0]);
-            $nLbN = $n * log($n, 2);
+            $nLbN =round($n * log($n, 2),2);
             $nSqr = $n * $n;
+
             $result[] = [
                 [
                     'main' => $myKey . '. Test an empty distorted array ',
                     'mapper' => 'operations in avalanche-sort an quicksort ' . "\n" .
+                        $myParam[3]."\n".
                         '(n = ' . $n . ', n*lb(n) = ' . $nLbN . ', n^2 = ' . $nSqr . ")\n ",
                 ],
 
@@ -147,10 +156,7 @@ class AvalancheSortArrayTest extends TestCase
             ];
 
         }
-
-
         return $result;
-
     }
 
 
@@ -167,7 +173,6 @@ class AvalancheSortArrayTest extends TestCase
             $this->assertSame(true, true, 'no data in the provider for the testing of `' .
                 'testStartAvalancheSort' . '`');
         } else {
-            // $result = $this->avalanchesort->myFuntion(...$params);
             $expectSorted = array_column($expects['data'], self::TEST_KEY);
             $distorted = $params['data'];
             $resultDistorted = array_column($distorted, self::TEST_KEY);
@@ -192,35 +197,35 @@ class AvalancheSortArrayTest extends TestCase
                 $expects['firstSort'],
                 'start-index for distored and original sorted array are euqal'
             );
-//
-//            // Avalanchesort
-////            $dataList = new ArrayList();
-//            $dataList = new MapperList(ArrayList::class);
-//            $dataList->setDataList($distorted, $compareFunc);
-//            $rangeResult = $this->avalanchesort->startAvalancheSort($dataList);
-//            $resultRaw = $dataList->getDataList();
-//            $firstResult = array_key_first($resultRaw);
-//            $resultTest = array_column($resultRaw, self::TEST_KEY);
-//            $mapperResult = $dataList->getCountsResult();
-//            $this->assertEquals(
-//                $expects['first'],
-//                $rangeResult->getStart(),
-//                'start-index for index in restorted Range and in original sorted array are equal'
-//            );
-//            $this->assertEquals(
-//                $expects['first'],
-//                $firstResult,
-//                'detect by result-array: start-index for index in restorted Range and in original sorted array are equal'
-//            );
-//            $this->assertEquals(
-//                $expectSorted,
-//                $resultTest,
-//                'test AvalancheSort: ' . $message['main']
-//            );
-//
+
+            // Avalanchesort
+//            $dataList = new ArrayList();
+            $dataList = new MapperList(ArrayList::class);
+            $dataList->setDataList($distorted, $compareFunc);
+            $rangeResult = $this->avalanchesort->startAvalancheSort($dataList);
+            $resultRaw = $dataList->getDataList();
+            $firstResult = array_key_first($resultRaw);
+            $resultTest = array_column($resultRaw, self::TEST_KEY);
+            $mapperResult = $dataList->getCountsResult();
+            $this->assertEquals(
+                $expects['first'],
+                $rangeResult->getStart(),
+                'start-index for index in restorted Range and in original sorted array are equal'
+            );
+            $this->assertEquals(
+                $expects['first'],
+                $firstResult,
+                'detect by result-array: start-index for index in restorted Range and in original sorted array are equal'
+            );
+            $this->assertEquals(
+                $expectSorted,
+                $resultTest,
+                'test AvalancheSort: ' . $message['main']
+            );
+
             // Quicksort
-            $dataListQ = new ArrayList();
-//            $dataListQ = new MapperList(ArrayList::class);
+//            $dataListQ = new ArrayList();
+            $dataListQ = new MapperList(ArrayList::class);
 
             $dataListQ->setDataList($distorted, $compareFunc);
 
@@ -228,7 +233,7 @@ class AvalancheSortArrayTest extends TestCase
             $resultRawQ = $dataListQ->getDataList();
             $firstResultQ = array_key_first($resultRawQ);
             $resultTestQ = array_column($resultRawQ, self::TEST_KEY);
-//            $mapperResultQ = $dataListQ->getCountsResult();
+            $mapperResultQ = $dataListQ->getCountsResult();
 
             $this->assertEquals(
                 $expects['first'],
@@ -245,9 +250,9 @@ class AvalancheSortArrayTest extends TestCase
                 $resultTestQ,
                 'test QuickSort: ' . $message['main']
             );
-//
-//            $mapperResult = $dataList->getCountsResult();
-//            $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ);
+
+            $mapperResult = $dataList->getCountsResult();
+            $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ);
         }
     }
 

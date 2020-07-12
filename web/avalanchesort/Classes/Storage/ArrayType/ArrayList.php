@@ -1,4 +1,5 @@
 <?php
+
 namespace Porthd\Avalanchesort\Storage\ArrayType;
 
 use http\Exception\UnexpectedValueException;
@@ -22,6 +23,8 @@ class ArrayList implements DataListQuickSortInterface
 {
     protected $dataList = [];
 
+    protected $testList = [];
+
     protected $keyList = [];
     protected $oldNewPartList = [];
     protected $firstKey = 0;
@@ -34,10 +37,11 @@ class ArrayList implements DataListQuickSortInterface
      */
     protected $compareFunc;
 
-    public function getDataItem($ident) {
-        if (!isset($this->dataList[$ident])){
+    public function getDataItem($ident)
+    {
+        if (!isset($this->dataList[$ident])) {
             throw new \UnexpectedValueException(
-                'An Unexpected error. The ident `'.print_r($ident,true).
+                'An Unexpected error. The ident `' . print_r($ident, true) .
                 '` is undefrined or it indicates an undefined value in the datalist.',
                 1592951234
             );
@@ -62,7 +66,7 @@ class ArrayList implements DataListQuickSortInterface
     {
         if ((!is_array($dataList)) ||
             (empty($dataList))
-        ){
+        ) {
             throw new \UnexpectedValueException(
                 'The value must be an array with at least one item.',
                 1592421675
@@ -102,10 +106,10 @@ class ArrayList implements DataListQuickSortInterface
      */
     public function getNextIdent($currentKey)
     {
-        if (($nextKey = array_search($currentKey, $this->keyList))=== false) {
+        if (($nextKey = array_search($currentKey, $this->keyList)) === false) {
             throw new \UnexpectedValueException(
-                'Unexpected errror. The current key is not part of the data-list used by getNextIdent.'.
-                "\n".print_r($currentKey,true)."\n".print_r($this->keyList,true),
+                'Unexpected errror. The current key is not part of the data-list used by getNextIdent.' .
+                "\n" . print_r($currentKey, true) . "\n" . print_r($this->keyList, true),
                 1592421875
             );
         }
@@ -127,15 +131,15 @@ class ArrayList implements DataListQuickSortInterface
         if ((!($startStartKey = array_search($oddListRange->getStart(), $this->keyList))) &&
             (!($stopStopKey = array_search($oddListRange->getStop(), $this->keyList))) &&
             ($startStartKey <= $stopStopKey)
-        ){
+        ) {
             throw new \UnexpectedValueException(
-                'Unexpected errror. The one of the current keys `'.$oddListRange->getStart().
-                '` or `'.$oddListRange->getStop().'`in the range seems to be undefined. Or the order in the keylist '.
-                'between'.' start `'.$startStartKey.'` and stop `'.$stopStopKey.'` is wrong. ',
+                'Unexpected errror. The one of the current keys `' . $oddListRange->getStart() .
+                '` or `' . $oddListRange->getStop() . '`in the range seems to be undefined. Or the order in the keylist ' .
+                'between' . ' start `' . $startStartKey . '` and stop `' . $stopStopKey . '` is wrong. ',
                 1593539824
             );
         }
-        $middleMiddleKdey = floor(($startStartKey+$stopStopKey)/2);
+        $middleMiddleKdey = floor(($startStartKey + $stopStopKey) / 2);
         return $this->keyList[$middleMiddleKdey];
     }
 
@@ -143,22 +147,23 @@ class ArrayList implements DataListQuickSortInterface
     /**
      * @param DataRangeInterface $oddListRange
      * @return mixed
+     * @throws \Exception
      */
     public function getRandomIdent(DataRangeInterface $oddListRange)
     {
         if ((!($startStartKey = array_search($oddListRange->getStart(), $this->keyList))) &&
             (!($stopStopKey = array_search($oddListRange->getStop(), $this->keyList))) &&
             ($startStartKey <= $stopStopKey)
-         ){
+        ) {
             throw new \UnexpectedValueException(
-                'Unexpected errror. The one of the current keys `'.$oddListRange->getStart().
-                '` or `'.$oddListRange->getStop().'`in the range seems to be undefined. Or the order in the keylist '.
-                'between'.' start `'.$startStartKey.'` and stop `'.$stopStopKey.'` is wrong. ',
+                'Unexpected errror. The one of the current keys `' . $oddListRange->getStart() .
+                '` or `' . $oddListRange->getStop() . '`in the range seems to be undefined. Or the order in the keylist ' .
+                'between' . ' start `' . $startStartKey . '` and stop `' . $stopStopKey . '` is wrong. ',
                 1593539824
             );
         }
-        $middleMiddleKdey = random_int($startStartKey,$stopStopKey);
-        return $this->keyList[$middleMiddleKdey];
+        $middleMiddleKey = random_int($startStartKey, $stopStopKey);
+        return $this->keyList[$middleMiddleKey];
     }
 
     /**
@@ -180,7 +185,8 @@ class ArrayList implements DataListQuickSortInterface
 
     /**
      * use the keylist to build an cascade-swap with data-rotation beween n elements
-     * @return stdClass
+     *
+     * @param DataRangeInterface $result
      */
     public function cascadeDataListChange(DataRangeInterface $result)
     {
@@ -193,24 +199,10 @@ class ArrayList implements DataListQuickSortInterface
                 1592421875
             );
         }
-        if ($lengthNew > 1){
+        if ($lengthNew > 1) {
             $startKeyKey = 0;
             while ($lengthNew > 1) {
-    //            for($i = $startKeyKey; $i < $lengthOld; $i++){
-    //                if ($this->oldNewPartList['new'][$i] !== $this->unusedKey) {
-    //                    $item = $this->oldNewPartList['new'][$i];
-    //
-    //                    $lastKey = $item;
-    //                    $startKeyKey = $i;
-    //                    if ($i<$lengthOld) {
-    //                        break 1;
-    //                    } else {
-    //                        break 2;
-    //                    }
-    //                }
-    //            }
-    //            $cascadeStorage = $this->dataList[$item];
-                foreach ($this->oldNewPartList['new'] as  $item) {
+                foreach ($this->oldNewPartList['new'] as $item) {
                     if ($item !== $this->unusedKey) {
                         $startKey = $item;
                         $lastKey = $startKey;
@@ -223,7 +215,7 @@ class ArrayList implements DataListQuickSortInterface
                     $nextKey = $this->oldNewPartList['new'][$nextKeyKey];
                     $lengthNew--;
                     if ($nextKey === $startKey) {
-                        $this->dataList[$lastKey]=$cascadeStorage;
+                        $this->dataList[$lastKey] = $cascadeStorage;
                         $this->oldNewPartList['new'][$nextKeyKey] = $this->unusedKey;
                         $flagMoreChanges = false;
                     } else if ($nextKey === $this->unusedKey) {
@@ -232,7 +224,7 @@ class ArrayList implements DataListQuickSortInterface
                             1592421875
                         );
                     } else {
-                        $this->dataList[$lastKey]=$this->dataList[$nextKey];
+                        $this->dataList[$lastKey] = $this->dataList[$nextKey];
                         $this->oldNewPartList['new'][$nextKeyKey] = $this->unusedKey;
                         $lastKey = $nextKey;
                         $flagMoreChanges = true;
@@ -242,7 +234,7 @@ class ArrayList implements DataListQuickSortInterface
             }
         }
         $result->setStart($this->oldNewPartList['old'][0]);
-        $result->setStop($this->oldNewPartList['old'][($lengthOld-1)]);
+        $result->setStop($this->oldNewPartList['old'][($lengthOld - 1)]);
     }
 
     /**
@@ -253,15 +245,15 @@ class ArrayList implements DataListQuickSortInterface
     {
         $startIndex = array_search($oddListRange->getStart(), $this->keyList);
         $stopIndex = array_search($oddListRange->getStop(), $this->keyList);
-        $oddLength =  $stopIndex - $startIndex + 1;
+        $oddLength = $stopIndex - $startIndex + 1;
         $oddKeyList = array_slice($this->keyList, $startIndex, $oddLength);
         $startIndex = array_search($evenListRange->getStart(), $this->keyList);
         $stopIndex = array_search($evenListRange->getStop(), $this->keyList);
-        $evenLength =  $stopIndex - $startIndex + 1;
+        $evenLength = $stopIndex - $startIndex + 1;
         $evenKeyList = array_slice($this->keyList, $startIndex, $evenLength);
         if ((!is_array($oddKeyList)) ||
             (!is_array($evenKeyList))
-        )  {
+        ) {
             throw new \UnexpectedValueException(
                 'Unexpected errror. One of the key-arrays is an array. This should not happen. check teh ranges-Definitions',
                 1594461885
@@ -271,7 +263,6 @@ class ArrayList implements DataListQuickSortInterface
         $this->oldNewPartList['old'] = array_merge($oddKeyList, $evenKeyList); // merge arrays
         $this->oldNewPartList['new'] = [];
     }
-
 
 
     /**
@@ -293,30 +284,27 @@ class ArrayList implements DataListQuickSortInterface
     }
 
     //Quicksortpart
-
-    public function getPrevIdent($currentKey) {
+    public function getPrevIdent($currentKey)
+    {
         if (($prevKey = array_search($currentKey, $this->keyList)) === false) {
             throw new \UnexpectedValueException(
-                'Unexpected errror. The current key is not part of the data-list used by getPrevIdent.'.
-                "\n".print_r($currentKey,true)."\n".print_r($this->keyList,true),
+                'Unexpected errror. The current key is not part of the data-list used by getPrevIdent.' .
+                "\n" . print_r($currentKey, true) . "\n" . print_r($this->keyList, true),
                 1592421875
             );
         }
         $prevKey--;
-        return (($prevKey >=0) ?
+        return (($prevKey >= 0) ?
             $this->keyList[$prevKey] :
             false
         );
-
-
     } //needed for a generel quicksort
 
-    public function swap($aKey, $bKey){
+    public function swap($aKey, $bKey)
+    {
         $swapItem = $this->dataList[$aKey];
         $this->dataList[$aKey] = $this->dataList[$bKey];
-         $this->dataList[$bKey] = $swapItem;
-        fwrite(STDERR, print_r('swap :'.$aKey.'/'.$this->dataList[$bKey]['test'].' - '.$bKey .'/'.$this->dataList[$aKey]['test']."\n", TRUE));
-
+        $this->dataList[$bKey] = $swapItem;
     } //needed for a generel quicksort
 }
 
