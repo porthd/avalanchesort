@@ -2,6 +2,7 @@
 namespace Porthd\Avalanchesort\Storage\ListType;
 
 use Porthd\Avalanchesort\Defs\DataCompareInterface;
+use Porthd\Avalanchesort\Defs\DataListAllSortInterface;
 use Porthd\Avalanchesort\Defs\DataListQuickSortInterface;
 use Porthd\Avalanchesort\Defs\DataRangeInterface;
 use stdClass;
@@ -10,16 +11,11 @@ use UnexpectedValueException;
 /**
  * This is a hybrid between Array and List
  */
-class ListList implements DataListQuickSortInterface
+class ListList implements DataListAllSortInterface
 {
 
-    public const LIST_NEXT = 'next';
-    public const LIST_PREV = 'prev';
-    public const LIST_VALUE = 'val';
 
     protected $list = null;
-    protected $firstRef = null;
-    protected $lastRef = null;
 
 
     public const NODE_LIST_NEXT_DATA_POINTER = 'next';
@@ -29,13 +25,11 @@ class ListList implements DataListQuickSortInterface
     /** @var null|ListBase  */
     protected $dataList=null;
 
-    protected $keyList = [];
     protected $firstNode;
     protected $lastNode;
     protected $lengthList = 0;
 
     protected $holdPartList;
-    protected $lastPartInList;
     protected $startPart;
     protected $stopPart;
 
@@ -238,6 +232,15 @@ class ListList implements DataListQuickSortInterface
     } //needed for a generel quicksort
 
 
+    public function getMiddleIdent(DataRangeInterface $oddListRange)
+    {
+        // TODO: Implement getMiddleIdent() method.
+    }
+
+    public function getRandomIdent(DataRangeInterface $oddListRange)
+    {
+        // TODO: Implement getRandomIdent() method.
+    }
 }
 
    

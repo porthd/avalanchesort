@@ -106,7 +106,7 @@ class AvalancheSortArrayTest extends TestCase
     public function dataProviderTestStartSortMethodsGivenRandomFilledArrayThenSortIt()
     {
 //        foreach ([false, true] as $flagAssoc) {
-        foreach ([false] as $flagAssoc) {
+        foreach ([true,false,] as $flagAssoc) {
             foreach ([
 //                     [20, true, 3.2, '20 elements, normal randomisiert'],
 //                     [100, false, 3.2, '100 elements, normal randomized'],

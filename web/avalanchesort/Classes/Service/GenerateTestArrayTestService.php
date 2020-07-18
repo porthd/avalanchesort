@@ -174,7 +174,7 @@ class GenerateTestArrayTestService
         foreach ($testArray as $key => $item) {
             $item[self::TESTLIST_SHUFFLE_KEY] = $key;
             $item[self::TESTLIST_SHUFFLE_POS] = $i;
-            $result[] = $item;
+            $result[$key] = $item;
             $i++;
         }
         return $result;

@@ -16,12 +16,6 @@ namespace Porthd\Avalanchesort\Defs;
 interface DataListAllSortInterface extends DataListSortInterface, DataListQuickSortInterface, DataListAvalancheSortInterface, DataListBubbleSortInterface
 {
 
-    public function initNewListPart(DataRangeInterface $oddListRange, DataRangeInterface $evenListRange); // okay
-
-    public function addListPart($ident); // okay
-
-    public function cascadeDataListChange(DataRangeInterface $resultRange); // okay
-
 
 
 }

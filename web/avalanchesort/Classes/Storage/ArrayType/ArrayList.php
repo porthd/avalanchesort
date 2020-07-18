@@ -4,6 +4,7 @@ namespace Porthd\Avalanchesort\Storage\ArrayType;
 
 use http\Exception\UnexpectedValueException;
 use Porthd\Avalanchesort\Defs\DataCompareInterface;
+use Porthd\Avalanchesort\Defs\DataListAllSortInterface;
 use Porthd\Avalanchesort\Defs\DataListAvalancheSortInterface;
 use Porthd\Avalanchesort\Defs\DataListQuickSortInterface;
 use Porthd\Avalanchesort\Defs\DataRangeInterface;
@@ -19,7 +20,7 @@ use stdClass;
  *  (c) 2020 Dr. Dieter Porth <info@mogber.de>
  *
  ***/
-class ArrayList implements DataListQuickSortInterface
+class ArrayList implements DataListAllSortInterface
 {
     protected $dataList = [];
 
