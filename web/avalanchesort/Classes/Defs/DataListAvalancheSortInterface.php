@@ -23,6 +23,5 @@ interface DataListAvalancheSortInterface extends DataListSortInterface
     public function cascadeDataListChange(DataRangeInterface $resultRange); // okay
 
 
-
 }
 

@@ -60,5 +60,6 @@ interface DataListSortInterface
     public function oddLowerEqualThanEven($oddData, $eventData): bool; // olkay
 
 
+
 }
 

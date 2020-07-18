@@ -13,7 +13,7 @@ namespace Porthd\Avalanchesort\Defs;
  *  (c) 2020 Dr. Dieter Porth <info@mogber.de>
  *
  ***/
-interface DataListAllSortInterface extends DataListSortInterface, DataListQuickSortInterface, DataListAvalancheSortInterface
+interface DataListAllSortInterface extends DataListSortInterface, DataListQuickSortInterface, DataListAvalancheSortInterface, DataListBubbleSortInterface
 {
 
     public function initNewListPart(DataRangeInterface $oddListRange, DataRangeInterface $evenListRange); // okay
