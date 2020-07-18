@@ -8,8 +8,7 @@ use Porthd\Avalanchesort\Storage\Additional\MapperList;
 use Porthd\Avalanchesort\Storage\ArrayType\ArrayDataCompare;
 use Porthd\Avalanchesort\Storage\ArrayType\ArrayIndexDataRange;
 use Porthd\Avalanchesort\Storage\ArrayType\ArrayList;
-use Porthd\Avalanchesort\Sort\AvalancheSort;
-use Porthd\Avalanchesort\Sort\QuickSort;
+use Porthd\Avalanchesort\Storage\ListType\ListDataCompare;
 
 class AvalancheSortArrayTest extends TestCase
 {
@@ -274,7 +273,6 @@ class AvalancheSortArrayTest extends TestCase
                 'test QuickSort: ' . $message['main']
             );
 
-            $mapperResult = $dataList->getCountsResult();
 
             // Quicksort
 //            $dataListBubble = new ArrayList();
@@ -304,7 +302,7 @@ class AvalancheSortArrayTest extends TestCase
                 'test QuickSort: ' . $message['main']
             );
 
-            $mapperResult = $dataList->getCountsResult();
+            $mapperResultBubble = $dataList->getCountsResult();
             $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ,$mapperResultBubble);
         }
     }
@@ -433,6 +431,7 @@ class AvalancheSortArrayTest extends TestCase
 
             // Avalanchesort
 //            $dataList = new ArrayList();
+
             $dataList = new MapperList(ArrayList::class);
             $dataList->setDataList($distorted, $compareFunc);
             $rangeResult = $this->avalanchesort->startAvalancheSort($dataList);
@@ -484,7 +483,6 @@ class AvalancheSortArrayTest extends TestCase
                 'test QuickSort: ' . $message['main']
             );
 
-            $mapperResult = $dataList->getCountsResult();
 
             // Quicksort
 //            $dataListBubble = new ArrayList();
@@ -514,7 +512,6 @@ class AvalancheSortArrayTest extends TestCase
                 'test QuickSort: ' . $message['main']
             );
 
-            $mapperResult = $dataList->getCountsResult();
             $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ,$mapperResultBubble);
         }
     }

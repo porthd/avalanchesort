@@ -1,7 +1,7 @@
 <?php
 namespace Porthd\Avalanchesort\Storage\ListType;
 
-use mysql_xdevapi\DatabaseObject;
+
 use Porthd\Avalanchesort\Defs\DataCompareInterface;
 use UnexpectedValueException;
 
