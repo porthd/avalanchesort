@@ -164,12 +164,6 @@ class AvalancheSort
         $oddStopIdent = $oddListRange->getStop();
         $evenNextIdent = $evenListRange->getStart();
         $evenStopIdent = $evenListRange->getStop();
-//        echo(
-//"liste: ".$oddNextIdent
-//.$oddStopIdent
-//.$evenNextIdent
-//.$evenStopIdent."\r\n"
-//        );
         $dataList->initNewListPart($oddListRange, $evenListRange);
         do {
             if ($dataList->oddLowerEqualThanEven(

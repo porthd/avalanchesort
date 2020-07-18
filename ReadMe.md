@@ -19,8 +19,6 @@ The current version is in develoment. The Quicksort and the avalanchesort should
 |  2. |           getDataItem |  3688 |  2850 | 
 |  3. |         getFirstIdent |     1 |     2 | 
 |  4. |          getNextIdent |   951 |  1473 | 
-|  5. |        getMiddleIdent |     0 |     0 | 
-|  6. |        getRandomIdent |     0 |     0 | 
 |  7. |          getPrevIdent |  1229 |     0 | 
 |  8. |          getLastIdent |     1 |     1 | 
 |  9. |           isLastIdent |     0 |   302 | 

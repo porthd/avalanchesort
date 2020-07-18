@@ -148,7 +148,7 @@ class AvalancheSortArrayTest extends TestCase
                         $myParam[2]
                     );
                 } else {
-                    $distoredArray = $generateTestArrayTestService->arragneResortArray($sortedArray);
+                    $distoredArray = $generateTestArrayTestService->arrangeResortArray($sortedArray);
                 }
                 $firstKeyDistorded = array_key_first($distoredArray);
                 $firstKeySorted = array_key_first($sortedArray);
@@ -309,95 +309,214 @@ class AvalancheSortArrayTest extends TestCase
         }
     }
 
+
     /**
      * @return array[]
      */
-    public function dataProviderTestStartAvalancheSortGiveAndSetDataListDoNotChangeResultIfArrayIsGiven()
+    public function dataProviderTestStartSortMethodsGivenRandomFilledListThenSortIt()
     {
-        /** @var GenerateTestArrayTestService $generateTestArrayTestService */
-        $generateTestArrayTestService = new GenerateTestArrayTestService(self::TEST_KEY);
-        $singleElementArray = $generateTestArrayTestService->generateListSingleElementArray();
-        $doubleElementArray = $generateTestArrayTestService->generateListTupleElementsArray(2);
-        $antiDoubleElementArray = $generateTestArrayTestService->generateListAntisortedTupelElementsArray(2);
-        $tripleElementArray = $generateTestArrayTestService->generateListTupleElementsArray(3);
-        $antiTripleElementArray = $generateTestArrayTestService->generateListAntisortedTupelElementsArray(3);
-        $decleElementArray = $generateTestArrayTestService->generateListTupleElementsArray(10);
-        $antiDecleElementArray = $generateTestArrayTestService->generateListAntisortedTupelElementsArray(10);
-        return [
-            [
-                '1. Test an sorted  array with one element ',
-                [
-                    'data' => $singleElementArray,
-                ],
-                [
-                    'data' => $singleElementArray,
-                ],
-            ],
-            [
-                '2.a. Test an sorted array with two elements',
-                [
-                    'data' => $doubleElementArray,
-                ],
-                [
-                    'data' => $doubleElementArray,
-                ],
-            ],
-            [
-                '2.b. Test an anti-sorted array with two elements',
-                [
-                    'data' => $antiDoubleElementArray,
-                ],
-                [
-                    'data' => $antiDoubleElementArray,
-                ],
-            ],
-            [
-                '3.a. Test an sorted array with three elements',
-                [
-                    'data' => $tripleElementArray,
-                ],
-                [
-                    'data' => $tripleElementArray,
-                ],
-            ],
-            [
-                '3.b. Test an anti-sorted array with three elements',
-                [
-                    'data' => $antiTripleElementArray,
-                ],
-                [
-                    'data' => $antiTripleElementArray,
-                ],
-            ],
-            [
-                '4.a. Test an sorted array with ten elements',
-                [
-                    'data' => $decleElementArray,
-                ],
-                [
-                    'data' => $decleElementArray,
-                ],
-            ],
-            [
-                '4.b. Test an anti-sorted array with ten elements',
-                [
-                    'data' => $antiDecleElementArray,
-                ],
-                [
-                    'data' => $antiDecleElementArray,
-                ],
-            ],
-        ];
+//        foreach ([false, true] as $flagAssoc) {
+        foreach ([true,false,] as $flagAssoc) {
+            foreach ([
+//                     [20, true, 3.2, '20 elements, normal randomisiert'],
+//                     [100, false, 3.2, '100 elements, normal randomized'],
+//                     [100, true, 0.1, '100 elements, easy randomized'],
+//                     [100, true, 1.2, '100 elements, simple randomized'],
+//                     [100, true, 3.2, '100 elements, normal randomized'],
+//                     [100, true, 10.2, '100 elements, heavy randomized'],
+//                     [500, true, 3.2, '500 elements, normal randomized'],
+//                     [2000, true, 5.2, '2000 elements, big randomized'],
+//                     [2000, true, 1.0, '2000 elements, simple randomized'],
+//                     [2000, true, 0.5, '2000 elements, easy randomized'],
+                         [200, true, 5.2, '200 elements, big randomized'],
+                         [200, true, 1.0, '200 elements, simple randomized'],
+                         [200, true, 0.5, '200 elements, easy randomized'],
+                         [200, false, 0.01, '200 elements, sorted (only 200 because of recursion of Quicksort and nesting-problem in xdebug)'],
+//                         [-200, true, 5.2, '200 elements, antisorted, big randomized'],
+//                         [-200, true, 1.0, '200 elements, antisorted, simple randomized'],
+//                         [-200, true, 0.5, '200 elements, antisorted easy randomized'],
+//                         [-200, false, 0.01, '200 elements, antisorted '],
+//                     [10000, true, 3.2],
+                     ]
+                     as $myKey => $myParam
+            ) {
+                /** @var GenerateTestArrayTestService $generateTestArrayTestService */
+                $generateTestListTestService = new GenerateTestArrayTestService(self::TEST_KEY);
+                $testListLength = abs($myParam[0]);
+                $flagRevers = $myParam[0]<=0;
+                /// generate a sorter or a unsorted array
+                $sortedList = $generateTestListTestService->generateListSortedSimpleList(
+                    $testListLength,
+                    $flagAssoc,
+                    $flagRevers
+                );
+                if ($myParam[1]) {
+                    $distoredList = $generateTestListTestService->shuffleListForSorting(
+                        $sortedList,
+                        0.01,
+                        0.001,
+                        $myParam[2]
+                    );
+                } else {
+                    $distoredList = $generateTestListTestService->arrangeResortList($sortedList);
+                }
+                $firstKeyDistorded = array_key_first($distoredList);
+                $firstKeySorted = array_key_first($sortedList);
+                $n = ($myParam[0]);
+                $nLbN = round($n * log($n, 2), 2);
+                $nSqr = $n * $n;
+
+                $result[] = [
+                    [
+                        'main' => $myKey . '. Test an empty distorted array ',
+                        'mapper' => 'operations in avalanche-sort an quicksort ' . "\n" .
+                            $myParam[3] . "\n" .
+                            '(n = ' . $n . ', n*lb(n) = ' . $nLbN . ', n^2 = ' . $nSqr . ")\n ",
+                    ],
+
+                    [ // Expects
+                        'testDiffer' => $myParam[1],
+                        'data' => $sortedList,
+                        'first' => $firstKeyDistorded,
+                        'firstSort' => $firstKeySorted,
+
+                    ],
+                    [ // params
+                        'data' => $distoredList,
+                        'first' => array_key_first($distoredList),
+                    ],
+                ];
+
+            }
+        }
+        return $result;
     }
 
 
-    public function testWas()
+    /**
+     * @param array $message
+     * @param array $expects
+     * @param array $params
+     *
+     * @dataProvider dataProviderTestStartSortMethodsGivenRandomFilledListThenSortIt
+     */
+    public function testStartSortMethodsGivenRandomFilledListThenSortIt(array $message, array $expects, array $params)
     {
-        $this->assertEquals(
-            1,
-            1,
-            'immer wahr / ever true'
-        );
+        if (!isset($expects) && empty($expects)) {
+            $this->assertSame(true, true, 'no data in the provider for the testing of `' .
+                'testStartAvalancheSort' . '`');
+        } else {
+            $expectSorted = array_column($expects['data'], self::TEST_KEY);
+            $distorted = $params['data'];
+            $resultDistorted = array_column($distorted, self::TEST_KEY);
+            $compareFunc = new ListDataCompare(self::TEST_KEY);
+            if ($expects['testDiffer']) {
+
+                $this->assertNotEquals(
+                    $expectSorted,
+                    $resultDistorted,
+                    'arrays must differ before sorting'
+                );
+            } else {
+                $this->assertEquals(
+                    $expectSorted,
+                    $resultDistorted,
+                    'arrays must NOT differ before sorting'
+                );
+
+            }
+            $this->assertEquals(
+                $expects['first'],
+                $expects['firstSort'],
+                'start-index for distored and original sorted array are euqal'
+            );
+
+            // Avalanchesort
+//            $dataList = new ArrayList();
+            $dataList = new MapperList(ArrayList::class);
+            $dataList->setDataList($distorted, $compareFunc);
+            $rangeResult = $this->avalanchesort->startAvalancheSort($dataList);
+            $resultRaw = $dataList->getDataList();
+            $firstResult = array_key_first($resultRaw);
+            $resultTest = array_column($resultRaw, self::TEST_KEY);
+            $mapperResult = $dataList->getCountsResult();
+            $this->assertEquals(
+                $expects['first'],
+                $rangeResult->getStart(),
+                'start-index for index in restorted Range and in original sorted array are equal'
+            );
+            $this->assertEquals(
+                $expects['first'],
+                $firstResult,
+                'detect by result-array: start-index for index in restorted Range and in original sorted array are equal'
+            );
+            $this->assertEquals(
+                $expectSorted,
+                $resultTest,
+                'test AvalancheSort: ' . $message['main']
+            );
+
+            // Quicksort
+//            $dataListQ = new ArrayList();
+            $dataListQ = new MapperList(ArrayList::class);
+
+            $dataListQ->setDataList($distorted, $compareFunc);
+
+            $rangeResultQ = $this->quickSort->qsortStart($dataListQ);
+            $resultRawQ = $dataListQ->getDataList();
+            $firstResultQ = array_key_first($resultRawQ);
+            $resultTestQ = array_column($resultRawQ, self::TEST_KEY);
+            $mapperResultQ = $dataListQ->getCountsResult();
+
+            $this->assertEquals(
+                $expects['first'],
+                $rangeResultQ->getStart(),
+                'start-index for index in restorted Range and in original sorted array are euqal'
+            );
+            $this->assertEquals(
+                $expects['first'],
+                $firstResultQ,
+                'detect by result-array: start-index for index in restorted Range and in original sorted array are equal'
+            );
+            $this->assertEquals(
+                $expectSorted,
+                $resultTestQ,
+                'test QuickSort: ' . $message['main']
+            );
+
+            $mapperResult = $dataList->getCountsResult();
+
+            // Quicksort
+//            $dataListBubble = new ArrayList();
+            $dataListBubble = new MapperList(ArrayList::class);
+
+            $dataListBubble->setDataList($distorted, $compareFunc);
+
+            $rangeResultBubble = $this->bubbleSort->bubbleSortStart($dataListBubble);
+            $resultRawBubble = $dataListBubble->getDataList();
+            $firstResultBubble = array_key_first($resultRawBubble);
+            $resultTestBubble = array_column($resultRawBubble, self::TEST_KEY);
+            $mapperResultBubble = $dataListBubble->getCountsResult();
+
+            $this->assertEquals(
+                $expects['first'],
+                $rangeResultBubble->getStart(),
+                'start-index for index in restorted Range and in original sorted array are euqal'
+            );
+            $this->assertEquals(
+                $expects['first'],
+                $firstResultBubble,
+                'detect by result-array: start-index for index in restorted Range and in original sorted array are equal'
+            );
+            $this->assertEquals(
+                $expectSorted,
+                $resultTestBubble,
+                'test QuickSort: ' . $message['main']
+            );
+
+            $mapperResult = $dataList->getCountsResult();
+            $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ,$mapperResultBubble);
+        }
     }
 
 }

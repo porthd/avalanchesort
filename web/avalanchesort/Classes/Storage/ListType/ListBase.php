@@ -1,6 +1,7 @@
 <?php
 namespace Porthd\Avalanchesort\Storage\ListType;
 
+use NamespaceCoverageClassExtendedTest;
 use Porthd\Avalanchesort\Defs\DataCompareInterface;
 use Porthd\Avalanchesort\Defs\DataListQuickSortInterface;
 use Porthd\Avalanchesort\Defs\DataRangeInterface;
@@ -16,6 +17,7 @@ class  ListBase
     public const LIST_NEXT = 'next';
     public const LIST_PREV = 'prev';
     public const LIST_VALUE = 'val';
+    public const LIST_SELF = 'selfkey';
 
     protected $list = [];
     protected $firstRef = null;
@@ -23,6 +25,14 @@ class  ListBase
 
     public function getFirstRef(){
         return $this->firstRef;
+    }
+
+    public function getPrevRef($ref){
+        return $ref[self::LIST_PREV];
+    }
+
+    public function getNextRef($ref){
+        return $ref[self::LIST_NEXT];
     }
 
     public function getLastRef(){
@@ -34,7 +44,7 @@ class  ListBase
         $next = $this->getFirstRef();
         $result = [];
         while ($next !== null) {
-            $result[] = $next[self::LIST_VALUE];
+            $result[$next[self::LIST_SELF]] = $next[self::LIST_VALUE];
             $next = $next[self::LIST_NEXT];
         }
         return $result;
@@ -64,6 +74,7 @@ class  ListBase
         if ($key === null) {
             $myKey = count($this->list);
             $this->list[$myKey] = [
+                self::LIST_SELF => $myKey,
                 self::LIST_NEXT => null,
                 self::LIST_PREV => $this->lastRef,
                 self::LIST_VALUE => $value,
@@ -72,6 +83,7 @@ class  ListBase
         } else if ((is_string($key)) && (!isset($this->list[$key]))) {
             $myKey = $key;
             $this->list[$myKey]=  [
+                self::LIST_SELF => $myKey,
                 self::LIST_NEXT => null,
                 self::LIST_PREV => $this->lastRef,
                 self::LIST_VALUE => $value,
@@ -102,9 +114,14 @@ class  ListBase
                 self::LIST_VALUE => $value,
             ];
             array_unshift($this->list, $item);
+            // must renumber the current state
+            foreach($this->list as $key => $item) {
+                $this->list[$key][ListBase::LIST_SELF]=$key;
+            }
             $myKey = 0;
         } else if ((is_string($key)) && (!isset($this->list[$key]))) {
             $item =  [
+                self::LIST_SELF => $key,
                 self::LIST_NEXT => $this->firstRef,
                 self::LIST_PREV => null,
                 self::LIST_VALUE => $value,
@@ -128,6 +145,36 @@ class  ListBase
         }
     }
 
+    public function synchronizeListgAndNaturalOrder()
+    {
+        $result = [];
+        $step = $this->firstRef;
+        $last = null;
+        $first = null;
+        while($step !== null) {
+            if ($last === null) {
+            $result[$step[ListBase::LIST_SELF]] = [
+                ListBase::LIST_SELF => $step[ListBase::LIST_SELF],
+                ListBase::LIST_NEXT => null,
+                ListBase::LIST_PREV => null,
+                ListBase::LIST_VALUE => $step[ListBase::LIST_SELF],
+                ];
+            } else {
+                $result[$step[ListBase::LIST_SELF]] = [
+                    ListBase::LIST_SELF => $step[ListBase::LIST_SELF],
+                    ListBase::LIST_NEXT => null,
+                    ListBase::LIST_PREV => $last,
+                    ListBase::LIST_VALUE => $step[ListBase::LIST_SELF],
+                ];
+                $last[ListBase::LIST_NEXT] = &$result[$step[ListBase::LIST_SELF]];
+            }
+            $last = &$result[$step[ListBase::LIST_SELF]];
+            if ($first === null) {
+                $first = &$result[$step[ListBase::LIST_SELF]];
+            }
+        }
+        return  $result;
+    }
 }
 
    

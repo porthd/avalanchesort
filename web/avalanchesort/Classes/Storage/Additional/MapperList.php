@@ -30,8 +30,6 @@ class MapperList implements DataListAllSortInterface
     protected const FUNC_SET_DATA_LIST = 'sdl';
     protected const FUNC_GET_FIRST_IDENT = 'gfi';
     protected const FUNC_GET_NEXT_IDENT = 'gni';
-    protected const FUNC_GET_MIDDLE_IDENT = 'gmi';
-    protected const FUNC_GET_RANDOM_IDENT = 'gri';
     protected const FUNC_GET_PREV_IDENT = 'gpi';
     protected const FUNC_GET_LAST_IDENT = 'gli';
     protected const FUNC_IS_LAST_IDENT = 'ili';
@@ -69,16 +67,6 @@ class MapperList implements DataListAllSortInterface
             self::KEY_FLAG => true,
             self::KEY_COUNT => 0,
             self::KEY_NAME => 'getNextIdent',
-        ],
-        self::FUNC_GET_MIDDLE_IDENT => [
-            self::KEY_FLAG => true,
-            self::KEY_COUNT => 0,
-            self::KEY_NAME => 'getMiddleIdent',
-        ],
-        self::FUNC_GET_RANDOM_IDENT => [
-            self::KEY_FLAG => true,
-            self::KEY_COUNT => 0,
-            self::KEY_NAME => 'getRandomIdent',
         ],
         self::FUNC_GET_PREV_IDENT => [
             self::KEY_FLAG => true,
@@ -201,29 +189,6 @@ class MapperList implements DataListAllSortInterface
         $this->count[self::FUNC_GET_NEXT_IDENT][self::KEY_COUNT]++;
         return $this->mapped->getNextIdent($currentKey);
     }
-
-
-    /**
-     * @param DataRangeInterface $oddListRange
-     * @return mixed
-     */
-    public function getMiddleIdent(DataRangeInterface $oddListRange)
-    {
-        $this->count[self::FUNC_GET_MIDDLE_IDENT][self::KEY_COUNT]++;
-        return $this->mapped->getMiddleIdent($oddListRange);
-    }
-
-
-    /**
-     * @param DataRangeInterface $oddListRange
-     * @return mixed
-     */
-    public function getRandomIdent(DataRangeInterface $oddListRange)
-    {
-        $this->count[self::FUNC_GET_RANDOM_IDENT][self::KEY_COUNT]++;
-        return $this->mapped->getRandomIdent($oddListRange);
-    }
-
 
     /**
      * @param $currentKey
