@@ -81,6 +81,7 @@ class BubbleSort
                         $nextStop = $left;
                         $flag = true;
                     }
+                    $left = $nextLeft;
                 } while ($nextLeft !== $stop);
                 if ($nextStop === $start) {
                     $flag = false; // nothing more to sort

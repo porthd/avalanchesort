@@ -39,6 +39,7 @@ class GenerateTestArrayTestService
         return $result;
     }
 
+
     public function generateListSortedSimpleArray($length = 10000, $flagAssoc = false, $flagReverse = false)
     {
         $result = [];
