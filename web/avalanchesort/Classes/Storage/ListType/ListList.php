@@ -245,7 +245,7 @@ class ListList implements DataListAllSortInterface
             // the last element ist merge in
             $this->stopRef[ListBase::LIST_NEXT] = $this->postEvenRef;
             if ($this->postEvenRef !== null) {
-                $this->postEvenRef[ListBase::LIST_PREV]=$this->stopRef;
+                $this->postEvenRef[ListBase::LIST_PREV] = $this->stopRef;
             }
         }
     }

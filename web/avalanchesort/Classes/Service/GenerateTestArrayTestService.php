@@ -11,12 +11,11 @@ class GenerateTestArrayTestService
     public const TESTLIST_SHUFFLE_KEY = 'shuffledKey';
     public const TESTLIST_SHUFFLE_POS = 'shuffledPos';
 
-    public const TESTLIST_NEXT_POS = 'nextElem';
-    public const TESTLIST_PREW_POS = 'prewElem';
+    public const TEST_KEY = 'test';
 
-    protected $keyForTest = 'test';
+    protected $keyForTest = self::TEST_KEY;
 
-    public function __construct($keyForTest = 'test') {
+    public function __construct($keyForTest = self::TEST_KEY) {
         $this->keyForTest = $keyForTest;
     }
 
@@ -28,13 +27,11 @@ class GenerateTestArrayTestService
         do {
             $assocKey = ($flagAssoc ? md5('No' . $i) : $i);
             $item = [
-                $this->keyForTest => ($flagReverse ? $length - $i : $i),
+                $this->keyForTest => ($flagReverse ? $length - $i-1 : $i),
                 self::TESTLIST_KEY_KEY => $assocKey,
                 self::TESTLIST_KEY_POS => $i,
                 self::TESTLIST_SHUFFLE_KEY =>  $i,
                 self::TESTLIST_SHUFFLE_POS => $i,
-//                self::TESTLIST_NEXT_POS => null,
-//                self::TESTLIST_PREW_POS => null,
             ];
             if ($flagAssoc) {
                 $result[$assocKey] = $item;
@@ -44,18 +41,6 @@ class GenerateTestArrayTestService
             $i++;
         } while (count($result) < $length);
 
-//        $first = null;
-//        $prev = null;
-//        foreach($result as $key => $item){
-//            if ($first === null) {
-//                $prev = &$result[$key];
-//                $first =  &$result[$key];
-//            } else {
-//                $result[$key][self::TESTLIST_PREW_POS] = $prev;
-//                $prev[self::TESTLIST_NEXT_POS] = &$result[$key];
-//                $prev = &$result[$key];
-//            }
-//        }
         return $result;
     }
 
@@ -82,8 +67,6 @@ class GenerateTestArrayTestService
             $i++;
         } while ($i <= $maxSwap);
         return $this->arrangeResortArray($testArray);
-
-        return $result;
     }
 
 
@@ -118,8 +101,6 @@ class GenerateTestArrayTestService
                 self::TESTLIST_KEY_POS => $i,
                 self::TESTLIST_SHUFFLE_KEY =>  $i,
                 self::TESTLIST_SHUFFLE_POS => $i,
-//                self::TESTLIST_NEXT_POS => null,
-//                self::TESTLIST_PREW_POS => null,
             ];
             if ($flagAssoc) {
                 $result[$assocKey] = $item;
@@ -128,19 +109,6 @@ class GenerateTestArrayTestService
             }
             $i++;
         } while (count($result) < $length);
-
-//        $first = null;
-//        $prev = null;
-//        foreach($result as $key => $item){
-//            if ($first === null) {
-//                $prev = &$result[$key];
-//                $first =  &$result[$key];
-//            } else {
-//                $result[$key][self::TESTLIST_PREW_POS] = $prev;
-//                $prev[self::TESTLIST_NEXT_POS] = &$result[$key];
-//                $prev = &$result[$key];
-//            }
-//        }
         return $result;
     }
 
@@ -167,8 +135,6 @@ class GenerateTestArrayTestService
             $i++;
         } while ($i <= $maxSwap);
         return $this->arrangeResortArray($testArray);
-
-        return $result;
     }
 
 
@@ -178,7 +144,6 @@ class GenerateTestArrayTestService
      */
     public function arrangeResortList($testArray): array
     {
-// resort shuffled array
         $result = [];
         $i = 0;
         foreach ($testArray as $key => $item) {

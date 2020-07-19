@@ -67,10 +67,12 @@ class QuickSort
         if ($pivot === $right) { // one element in range
             return true;
         } elseif (($nextLeft = $dataList->getNextIdent($pivot)) === $right) { // two element in range
-            if (!$dataList->oddLowerEqualThanEven(
+            if (($pivot !== $right) &&
+                (
+                !$dataList->oddLowerEqualThanEven(
                 $dataList->getDataItem($pivot),
                 $dataList->getDataItem($right)
-            )) {
+            ))) {
                 $dataList->swap($pivot, $right);
             }
             return true;
@@ -117,7 +119,9 @@ class QuickSort
                             $dataList->getDataItem($pivot),
                             $dataList->getDataItem($prevRight)
                         )) {
-                            $dataList->swap($pivot, $prevRight);  // PrevRight contains Pivot-Element
+                            if ($pivot !== $prevRight) {
+                                $dataList->swap($pivot, $prevRight);  // PrevRight contains Pivot-Element
+                            }
                             $leftRange->setStop($prevRight); // Range does not contain Pivot-element
                             $rightRange->setStart($dataList->getNextIdent($prevRight));
                         } else {
@@ -132,7 +136,9 @@ class QuickSort
                         $dataList->getDataItem($pivot),
                         $dataList->getDataItem($nextLeft)
                     )) {
-                        $dataList->swap($pivot, $nextLeft); // NextLeft contains Piovot-Element
+                        if ($pivot !== $nextLeft) {
+                            $dataList->swap($pivot, $nextLeft); // NextLeft contains Piovot-Element
+                        }
                         $stopLeft = ($nextLeft !== $leftRange->getStart()) ? $dataList->getPrevIdent($nextLeft) :$nextLeft;
                         $leftRange->setStop($stopLeft); // Range does not contain Pivot-element
                         $startRight = ($nextLeft !== $right)?$dataList->getNextIdent($nextLeft):$right;
@@ -140,8 +146,12 @@ class QuickSort
                     } else {
                         $stopLeft = $dataList->getPrevIdent($nextLeft);
                         $startRight = $nextLeft;
-                        $dataList->swap($pivot, $stopLeft); // NextLeft contains Piovot-Element
-                        $stopLeft = ($stopLeft !== $leftRange->getStart()) ? $dataList->getPrevIdent($stopLeft) :$stopLeft;
+                        if ($pivot !== $stopLeft) {
+                            $dataList->swap($pivot, $stopLeft); // NextLeft contains Piovot-Element
+                        }
+                        $stopLeft = ($stopLeft !== $leftRange->getStart()) ?
+                            $dataList->getPrevIdent($stopLeft) :
+                            $stopLeft;
                         $leftRange->setStop($dataList->getPrevIdent($nextLeft)); // Range does not contain Pivot-element
                         $rightRange->setStart($startRight);
 

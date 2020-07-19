@@ -124,6 +124,10 @@ class MapperList implements DataListAllSortInterface
      * @var array|int[]
      */
     protected $count = [];
+    /**
+     * @var array
+     */
+    protected $keyList = [];
 
     /**
      * @var DataListSortInterface
@@ -131,7 +135,7 @@ class MapperList implements DataListAllSortInterface
      */
     protected $mapped;
 
-    public function __construct($className)
+    public function __construct($className, $keyList)
     {
         $this->count = self::FUNC_RESET_COUNT;
         $this->mapped = new $className();
@@ -141,6 +145,7 @@ class MapperList implements DataListAllSortInterface
                 1592662983
             );
         }
+        $this->keyList = $keyList;
     }
 
     public function reinitCount()
@@ -226,11 +231,11 @@ class MapperList implements DataListAllSortInterface
     public function cascadeDataListChange(DataRangeInterface $resultRange)
     {
         $this->count[self::FUNC_CASCADE_DATA_LIST_CHANGE][self::KEY_COUNT]++;
-        $start = $resultRange->getStart();
-        $stop = $resultRange->getStop();
-        $moves = $stop-$start+2;
+        $this->mapped->cascadeDataListChange($resultRange);
+        $start = array_search($resultRange->getStart(), $this->keyList);
+        $stop = array_search($resultRange->getStop(), $this->keyList);
+        $moves = ceil(($stop-$start+1)/2)*3; // estimated, that there are only swap needed2
         $this->count[self::FUNC_CASCADE_DATA_LIST_MOVES][self::KEY_COUNT] += $moves;
-        return $this->mapped->cascadeDataListChange($resultRange);
     }
 
     /**

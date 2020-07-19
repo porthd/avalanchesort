@@ -1,0 +1,126 @@
+Testing started at 16:32 ...
+C:\xampp\php\php.exe C:/php7/avalanchesort/vendor/phpunit/phpunit/phpunit --no-configuration --filter "/(Porthd\\Avalanchesort\\Sort\\AvalancheSortArrayTest::testStartSortMethodsGivenRandomFilledArrayThenSortIt)( .*)?$/" --test-suffix AvalancheSortArrayTest.php C:\php7\avalanchesort\web\avalanchesort\Tests\Sort --teamcity --cache-result-file=C:\php7\avalanchesort\.phpunit.result.cache
+PHPUnit 8.5.8 by Sebastian Bergmann and contributors.
+
+operations in avalanche-sort an quicksort
+200 elements in Associative array, big randomized
+(n = 200, n*lb(n) = 1528.77, n^2 = 40000)
+    .                 type      BS      QS      AS
+  0.           getDataList       1       1       1
+  1.           setDataList       1       1       1
+  2.           getDataItem   38912    3970    2848
+  3.         getFirstIdent       1       1       2
+  4.          getNextIdent   19456    1152    1478
+  5.          getPrevIdent       0    1165       0
+  6.          getLastIdent       1       1       1
+  7.           isLastIdent       0       0     302
+  8. cascadeDataListChange       0       0      96
+  9.   cascadeData (moves)       0       0    2136
+ 10.                  swap    7458     304       0
+ 11.          swap (moves)   22374     912       0
+ 12.       initNewListPart       0       0      96
+ 13.           addListPart       0       0    1375
+ 14. oddLowerEqualThanEven   19456    1985    1424
+B=operations in avalanche-sort an quicksort
+200 elements in Associative array, sorted (only 200 because of recursion of Quicksort and nesting-problem in xdebug)
+(n = 200, n*lb(n) = 1528.77, n^2 = 40000)
+    .                 type      BS      QS      AS
+  0.           getDataList       1       1       1
+  1.           setDataList       1       1       1
+  2.           getDataItem     398   40196     398
+  3.         getFirstIdent       1       1       1
+  4.          getNextIdent     199     397     199
+  5.          getPrevIdent       0   20097       0
+  6.          getLastIdent       1       1       0
+  7.           isLastIdent       0       0     202
+  8. cascadeDataListChange       0       0       0
+  9.   cascadeData (moves)       0       0       0
+ 10.                  swap       0       0       0
+ 11.          swap (moves)       0       0       0
+ 12.       initNewListPart       0       0       0
+ 13.           addListPart       0       0       0
+ 14. oddLowerEqualThanEven     199   20098     199
+B=operations in avalanche-sort an quicksort
+200 elements in Associative array, antisorted
+(n = -200, n*lb(n) = NAN, n^2 = 40000)
+    .                 type      BS      QS      AS
+  0.           getDataList       1       1       1
+  1.           setDataList       1       1       1
+  2.           getDataItem   39800   26236    1916
+  3.         getFirstIdent       1       1       2
+  4.          getNextIdent   19900    7009    1590
+  5.          getPrevIdent       0    6534       0
+  6.          getLastIdent       1       1       1
+  7.           isLastIdent       0       0     399
+  8. cascadeDataListChange       0       0     192
+  9.   cascadeData (moves)       0       0    2406
+ 10.                  swap   19818     148       0
+ 11.          swap (moves)   59454     444       0
+ 12.       initNewListPart       0       0     192
+ 13.           addListPart       0       0    1583
+ 14. oddLowerEqualThanEven   19900   13118     958
+B=operations in avalanche-sort an quicksort
+200 elements, big randomized
+(n = 200, n*lb(n) = 1528.77, n^2 = 40000)
+    .                 type      BS      QS      AS
+  0.           getDataList       1       1       1
+  1.           setDataList       1       1       1
+  2.           getDataItem   39226    4614    2800
+  3.         getFirstIdent       1       1       2
+  4.          getNextIdent   19613    1815    1465
+  5.          getPrevIdent       0     842       0
+  6.          getLastIdent       1       1       1
+  7.           isLastIdent       0       0     309
+  8. cascadeDataListChange       0       0     104
+  9.   cascadeData (moves)       0       0    2130
+ 10.                  swap    7674     290       0
+ 11.          swap (moves)   23022     870       0
+ 12.       initNewListPart       0       0     104
+ 13.           addListPart       0       0    1370
+ 14. oddLowerEqualThanEven   19613    2307    1400
+B=operations in avalanche-sort an quicksort
+200 elements, sorted (only 200 because of recursion of Quicksort and nesting-problem in xdebug)
+(n = 200, n*lb(n) = 1528.77, n^2 = 40000)
+    .                 type      BS      QS      AS
+  0.           getDataList       1       1       1
+  1.           setDataList       1       1       1
+  2.           getDataItem     398   40196     398
+  3.         getFirstIdent       1       1       1
+  4.          getNextIdent     199     397     199
+  5.          getPrevIdent       0   20097       0
+  6.          getLastIdent       1       1       0
+  7.           isLastIdent       0       0     202
+  8. cascadeDataListChange       0       0       0
+  9.   cascadeData (moves)       0       0       0
+ 10.                  swap       0       0       0
+ 11.          swap (moves)       0       0       0
+ 12.       initNewListPart       0       0       0
+ 13.           addListPart       0       0       0
+ 14. oddLowerEqualThanEven     199   20098     199
+B=operations in avalanche-sort an quicksort
+200 elements, antisorted
+(n = -200, n*lb(n) = NAN, n^2 = 40000)
+    .                 type      BS      QS      AS
+  0.           getDataList       1       1       1
+  1.           setDataList       1       1       1
+  2.           getDataItem   39800   21426    1924
+  3.         getFirstIdent       1       1       2
+  4.          getNextIdent   19900    5813    1591
+  5.          getPrevIdent       0    5337       0
+  6.          getLastIdent       1       1       1
+  7.           isLastIdent       0       0     399
+  8. cascadeDataListChange       0       0     192
+  9.   cascadeData (moves)       0       0    2412
+ 10.                  swap   19822     154       0
+ 11.          swap (moves)   59466     462       0
+ 12.       initNewListPart       0       0     192
+ 13.           addListPart       0       0    1584
+ 14. oddLowerEqualThanEven   19900   10713     962
+
+
+Time: 3.88 seconds, Memory: 8.00 MB
+
+OK (6 tests, 66 assertions)
+
+Process finished with exit code 0
+B=

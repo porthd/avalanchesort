@@ -44,7 +44,7 @@ interface DataListSortInterface
      * It is recommended, to define getter and setter for the compare-method.
      *
      * @param $dataList
-     * @param DataCompareInterface $compareFunc a emthod, which can order two items of the data.
+     * @param DataCompareInterface $compareFunc a class with an emthod, which can order two items of the data.
      * @return mixed
      */
     public function setDataList($dataList, DataCompareInterface $compareFunc);

@@ -3,11 +3,13 @@
 namespace Porthd\Avalanchesort\Sort;
 
 use PHPUnit\Framework\TestCase;
+use Porthd\Avalanchesort\Defs\DataCompareInterface;
 use Porthd\Avalanchesort\Service\GenerateTestArrayTestService;
 use Porthd\Avalanchesort\Storage\Additional\MapperList;
 use Porthd\Avalanchesort\Storage\ArrayType\ArrayDataCompare;
 use Porthd\Avalanchesort\Storage\ArrayType\ArrayIndexDataRange;
 use Porthd\Avalanchesort\Storage\ArrayType\ArrayList;
+use Porthd\Avalanchesort\Storage\Additional\TestSimpleArrayCompare;
 use Porthd\Avalanchesort\Storage\ListType\ListDataCompare;
 
 class AvalancheSortArrayTest extends TestCase
@@ -18,6 +20,7 @@ class AvalancheSortArrayTest extends TestCase
      * @var \Porthd\Avalanchesort\Sort\AvalancheSort
      */
     protected $avalanchesort;
+    protected $compareFunctionName;
 
     /**
      * @var QuickSort
@@ -46,7 +49,7 @@ class AvalancheSortArrayTest extends TestCase
 
     }
 
-    public function showCountingResult($sortProblemMsg, $avalancheSortCounts, $quickSortCounts, $bubbleSortCounts )
+    public function showCountingResult($sortProblemMsg, $avalancheSortCounts, $quickSortCounts, $bubbleSortCounts)
     {
 
         $name = array_column($avalancheSortCounts, MapperList::KEY_NAME);
@@ -63,8 +66,8 @@ class AvalancheSortArrayTest extends TestCase
         $avalancheCounts = array_column($avalancheSortCounts, MapperList::KEY_COUNT);
         $bubbleCounts = array_column($bubbleSortCounts, MapperList::KEY_COUNT);
 
-        $max=[];
-        $digitsInNumbers =[];
+        $max = [];
+        $digitsInNumbers = [];
 
         $max[] = $myMax = abs(max($quickCounts));
         $digitsInNumbers[] = (ceil(log10($myMax + 1)) + 2);
@@ -72,8 +75,8 @@ class AvalancheSortArrayTest extends TestCase
         $digitsInNumbers[] = (ceil(log10($myMax + 1)) + 2);
         $max[] = $myMax = abs(max($bubbleCounts));
         $digitsInNumbers[] = (ceil(log10($myMax + 1)) + 2);
-        $key = array_search(max($max),$max);
-        $digitsInNumber = $digitsInNumbers[$key] ;
+        $key = array_search(max($max), $max);
+        $digitsInNumber = $digitsInNumbers[$key];
         fwrite(STDERR, print_r($sortProblemMsg, TRUE));
         $result = '';
         $result .= sprintf("%3s.", '');
@@ -104,50 +107,64 @@ class AvalancheSortArrayTest extends TestCase
      */
     public function dataProviderTestStartSortMethodsGivenRandomFilledArrayThenSortIt()
     {
-//        foreach ([false, true] as $flagAssoc) {
-        foreach ([true,false,] as $flagAssoc) {
+        // If You use xdebug, then the nestinlevel may cause a fail of the tests
+        foreach ([true, false,] as $flagAssoc) {
+            $addMsg = ($flagAssoc ? ' in Associative array' : '');
             foreach ([
-//                     [20, true, 3.2, '20 elements, normal randomisiert'],
-//                     [100, false, 3.2, '100 elements, normal randomized'],
-//                     [100, true, 0.1, '100 elements, easy randomized'],
-//                     [100, true, 1.2, '100 elements, simple randomized'],
-//                     [100, true, 3.2, '100 elements, normal randomized'],
-//                     [100, true, 10.2, '100 elements, heavy randomized'],
-//                     [500, true, 3.2, '500 elements, normal randomized'],
-//                     [2000, true, 5.2, '2000 elements, big randomized'],
-//                     [2000, true, 1.0, '2000 elements, simple randomized'],
-//                     [2000, true, 0.5, '2000 elements, easy randomized'],
-                         [200, true, 5.2, '200 elements, big randomized'],
-                         [200, true, 1.0, '200 elements, simple randomized'],
-                         [200, true, 0.5, '200 elements, easy randomized'],
-                         [200, false, 0.01, '200 elements, sorted (only 200 because of recursion of Quicksort and nesting-problem in xdebug)'],
-//                         [-200, true, 5.2, '200 elements, antisorted, big randomized'],
-//                         [-200, true, 1.0, '200 elements, antisorted, simple randomized'],
-//                         [-200, true, 0.5, '200 elements, antisorted easy randomized'],
-//                         [-200, false, 0.01, '200 elements, antisorted '],
-//                     [10000, true, 3.2],
+                         [20, true, 3.2, '20 elements'.$addMsg.', normal randomisiert'],
+                         [100, false, 3.2, '100 elements'.$addMsg.', normal randomized'],
+                         [100, true, 0.1, '100 elements'.$addMsg.', easy randomized'],
+                         [100, true, 1.2, '100 elements'.$addMsg.', simple randomized'],
+                         [100, true, 3.2, '100 elements'.$addMsg.', normal randomized'],
+                         [100, true, 10.2, '100 elements'.$addMsg.', heavy randomized'],
+                         [500, true, 3.2, '500 elements'.$addMsg.', normal randomized'],
+                         [2000, true, 5.2, 'patience: 2000 elements'.$addMsg.', big randomized'],
+                         [2000, true, 1.0, 'patience: 2000 elements'.$addMsg.', simple randomized'],
+                         [2000, true, 0.5, 'patience:2000 elements'.$addMsg.', easy randomized'],
+                         [200, true, 5.2, '200 elements'.$addMsg.', big randomized'],
+                         [200, true, 1.0, '200 elements'.$addMsg.', simple randomized'],
+                         [200, true, 0.5, '200 elements'.$addMsg.', easy randomized'],
+                         [200, false, 0.01, '200 elements'.$addMsg.', sorted (only 200 because of recursion of Quicksort and nesting-problem in xdebug)'],
+                         [-200, true, 5.2, '200 elements' . $addMsg . ', antisorted, big randomized'],
+                         [-200, true, 1.0, '200 elements' . $addMsg . ', antisorted, simple randomized'],
+                         [-200, true, 0.5, '200 elements' . $addMsg . ', antisorted easy randomized'],
+                         [-200, true, 0.01, '200 elements' . $addMsg . ', antisorted '],
+//                         [10000, true, 3.2, 'Super Patience, 10000 elements' . $addMsg . ', antisorted '],
                      ]
                      as $myKey => $myParam
             ) {
                 /** @var GenerateTestArrayTestService $generateTestArrayTestService */
                 $generateTestArrayTestService = new GenerateTestArrayTestService(self::TEST_KEY);
                 $testArrayLength = abs($myParam[0]);
-                $flagRevers = $myParam[0]<=0;
+                $flagRevers = $myParam[0] <= 0;
                 /// generate a sorter or a unsorted array
-                $sortedArray = $generateTestArrayTestService->generateListSortedSimpleArray(
+                $testArray = $generateTestArrayTestService->generateListSortedSimpleArray(
                     $testArrayLength,
                     $flagAssoc,
                     $flagRevers
                 );
+                if ($flagRevers) {
+                    $sortedArray = $testArray;
+                    $myDummylength = count($sortedArray)-1;
+                    // generate a sorted varioation
+                    array_walk($sortedArray,
+                        function (&$item, $key, $myDummylength) {
+                            $item[self::TEST_KEY] = $myDummylength - $item[self::TEST_KEY];
+                        },
+                        $myDummylength
+                    );
+                } else {
+                    $sortedArray = $testArray;
+                }
                 if ($myParam[1]) {
                     $distoredArray = $generateTestArrayTestService->shuffleArrayForSorting(
-                        $sortedArray,
+                        $testArray,
                         0.01,
                         0.001,
                         $myParam[2]
                     );
                 } else {
-                    $distoredArray = $generateTestArrayTestService->arrangeResortArray($sortedArray);
+                    $distoredArray = $generateTestArrayTestService->arrangeResortArray($testArray);
                 }
                 $firstKeyDistorded = array_key_first($distoredArray);
                 $firstKeySorted = array_key_first($sortedArray);
@@ -157,7 +174,7 @@ class AvalancheSortArrayTest extends TestCase
 
                 $result[] = [
                     [
-                        'main' => $myKey . '. Test an empty distorted array ',
+                        'main' => $myKey . '. Test an distorted array ',
                         'mapper' => 'operations in avalanche-sort an quicksort ' . "\n" .
                             $myParam[3] . "\n" .
                             '(n = ' . $n . ', n*lb(n) = ' . $nLbN . ', n^2 = ' . $nSqr . ")\n ",
@@ -222,7 +239,8 @@ class AvalancheSortArrayTest extends TestCase
 
             // Avalanchesort
 //            $dataList = new ArrayList();
-            $dataList = new MapperList(ArrayList::class);
+            $keyList = array_keys($distorted);
+            $dataList = new MapperList(ArrayList::class, $keyList);
             $dataList->setDataList($distorted, $compareFunc);
             $rangeResult = $this->avalanchesort->startAvalancheSort($dataList);
             $resultRaw = $dataList->getDataList();
@@ -247,8 +265,8 @@ class AvalancheSortArrayTest extends TestCase
 
             // Quicksort
 //            $dataListQ = new ArrayList();
-            $dataListQ = new MapperList(ArrayList::class);
-
+            $keyList = array_keys($distorted);
+            $dataListQ = new MapperList(ArrayList::class, $keyList);
             $dataListQ->setDataList($distorted, $compareFunc);
 
             $rangeResultQ = $this->quickSort->qsortStart($dataListQ);
@@ -276,8 +294,8 @@ class AvalancheSortArrayTest extends TestCase
 
             // Quicksort
 //            $dataListBubble = new ArrayList();
-            $dataListBubble = new MapperList(ArrayList::class);
-
+            $keyList = array_keys($distorted);
+            $dataListBubble = new MapperList(ArrayList::class, $keyList);
             $dataListBubble->setDataList($distorted, $compareFunc);
 
             $rangeResultBubble = $this->bubbleSort->bubbleSortStart($dataListBubble);
@@ -302,8 +320,7 @@ class AvalancheSortArrayTest extends TestCase
                 'test QuickSort: ' . $message['main']
             );
 
-            $mapperResultBubble = $dataList->getCountsResult();
-            $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ,$mapperResultBubble);
+            $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ, $mapperResultBubble);
         }
     }
 
@@ -313,41 +330,55 @@ class AvalancheSortArrayTest extends TestCase
      */
     public function dataProviderTestStartSortMethodsGivenRandomFilledListThenSortIt()
     {
-//        foreach ([false, true] as $flagAssoc) {
-        foreach ([true,false,] as $flagAssoc) {
+        // If You use xdebug, then the nestinlevel may cause a fail of the tests
+        foreach ([true, false,] as $flagAssoc) {
+            $addMsg = ($flagAssoc ? ' in Associative array' : '');
             foreach ([
-//                     [20, true, 3.2, '20 elements, normal randomisiert'],
-//                     [100, false, 3.2, '100 elements, normal randomized'],
-//                     [100, true, 0.1, '100 elements, easy randomized'],
-//                     [100, true, 1.2, '100 elements, simple randomized'],
-//                     [100, true, 3.2, '100 elements, normal randomized'],
-//                     [100, true, 10.2, '100 elements, heavy randomized'],
-//                     [500, true, 3.2, '500 elements, normal randomized'],
-//                     [2000, true, 5.2, '2000 elements, big randomized'],
-//                     [2000, true, 1.0, '2000 elements, simple randomized'],
-//                     [2000, true, 0.5, '2000 elements, easy randomized'],
-                         [200, true, 5.2, '200 elements, big randomized'],
-                         [200, true, 1.0, '200 elements, simple randomized'],
-                         [200, true, 0.5, '200 elements, easy randomized'],
-                         [200, false, 0.01, '200 elements, sorted (only 200 because of recursion of Quicksort and nesting-problem in xdebug)'],
-//                         [-200, true, 5.2, '200 elements, antisorted, big randomized'],
-//                         [-200, true, 1.0, '200 elements, antisorted, simple randomized'],
-//                         [-200, true, 0.5, '200 elements, antisorted easy randomized'],
-//                         [-200, false, 0.01, '200 elements, antisorted '],
-//                     [10000, true, 3.2],
-                     ]
+                         [20, true, 3.2, '20 elements'.$addMsg.', normal randomisiert'],
+                         [100, false, 3.2, '100 elements'.$addMsg.', normal randomized'],
+                         [100, true, 0.1, '100 elements'.$addMsg.', easy randomized'],
+                         [100, true, 1.2, '100 elements'.$addMsg.', simple randomized'],
+                         [100, true, 3.2, '100 elements'.$addMsg.', normal randomized'],
+                         [100, true, 10.2, '100 elements'.$addMsg.', heavy randomized'],
+                         [500, true, 3.2, '500 elements'.$addMsg.', normal randomized'],
+                         [2000, true, 5.2, 'patience 2000 elements'.$addMsg.', big randomized'],
+                         [2000, true, 1.0, 'patience 2000 elements'.$addMsg.', simple randomized'],
+                         [2000, true, 0.5, 'patience 2000 elements'.$addMsg.', easy randomized'],
+                         [200, true, 5.2, '200 elements' . $addMsg . ', big randomized'],
+                         [200, true, 1.0, '200 elements' . $addMsg . ', simple randomized'],
+                         [200, true, 0.5, '200 elements' . $addMsg . ', easy randomized'],
+                         [200, false, 0.01, '200 elements' . $addMsg . ', sorted (only 200 because of recursion of Quicksort and nesting-problem in xdebug)'],
+                         [-200, true, 5.2, '200 elements'.$addMsg.', antisorted, big randomized'],
+                         [-200, true, 1.0, '200 elements'.$addMsg.', antisorted, simple randomized'],
+                         [-200, true, 0.5, '200 elements'.$addMsg.', antisorted easy randomized'],
+                         [-200, false, 0.01, '200 elements'.$addMsg.', antisorted '],
+//                         [10000, true, 3.2, 'Super Patience, 10000 elements' . $addMsg . ', antisorted '],
+                 ]
                      as $myKey => $myParam
             ) {
                 /** @var GenerateTestArrayTestService $generateTestArrayTestService */
                 $generateTestListTestService = new GenerateTestArrayTestService(self::TEST_KEY);
                 $testListLength = abs($myParam[0]);
-                $flagRevers = $myParam[0]<=0;
+                $flagRevers = $myParam[0] <= 0;
                 /// generate a sorter or a unsorted array
-                $sortedList = $generateTestListTestService->generateListSortedSimpleList(
+                $testList = $generateTestListTestService->generateListSortedSimpleList(
                     $testListLength,
                     $flagAssoc,
                     $flagRevers
                 );
+                if ($flagRevers) {
+                    $sortedList = $testList;
+                    $myDummylength = count($sortedList)-1;
+                    // generate a sorted varioation
+                    array_walk($sortedList,
+                        function (&$item, $key, $myDummylength) {
+                            $item[self::TEST_KEY] = $myDummylength - $item[self::TEST_KEY];
+                        },
+                        $myDummylength
+                    );
+                } else {
+                    $sortedList = $testList;
+                }
                 if ($myParam[1]) {
                     $distoredList = $generateTestListTestService->shuffleListForSorting(
                         $sortedList,
@@ -366,7 +397,7 @@ class AvalancheSortArrayTest extends TestCase
 
                 $result[] = [
                     [
-                        'main' => $myKey . '. Test an empty distorted array ',
+                        'main' => $myKey . '. Test an distorted array ',
                         'mapper' => 'operations in avalanche-sort an quicksort ' . "\n" .
                             $myParam[3] . "\n" .
                             '(n = ' . $n . ', n*lb(n) = ' . $nLbN . ', n^2 = ' . $nSqr . ")\n ",
@@ -431,8 +462,8 @@ class AvalancheSortArrayTest extends TestCase
 
             // Avalanchesort
 //            $dataList = new ArrayList();
-
-            $dataList = new MapperList(ArrayList::class);
+            $keyList = array_keys($distorted);
+            $dataList = new MapperList(ArrayList::class, $keyList);
             $dataList->setDataList($distorted, $compareFunc);
             $rangeResult = $this->avalanchesort->startAvalancheSort($dataList);
             $resultRaw = $dataList->getDataList();
@@ -457,8 +488,8 @@ class AvalancheSortArrayTest extends TestCase
 
             // Quicksort
 //            $dataListQ = new ArrayList();
-            $dataListQ = new MapperList(ArrayList::class);
-
+            $keyList = array_keys($distorted);
+            $dataListQ = new MapperList(ArrayList::class, $keyList);
             $dataListQ->setDataList($distorted, $compareFunc);
 
             $rangeResultQ = $this->quickSort->qsortStart($dataListQ);
@@ -486,8 +517,8 @@ class AvalancheSortArrayTest extends TestCase
 
             // Quicksort
 //            $dataListBubble = new ArrayList();
-            $dataListBubble = new MapperList(ArrayList::class);
-
+            $keyList = array_keys($distorted);
+            $dataListBubble = new MapperList(ArrayList::class, $keyList);
             $dataListBubble->setDataList($distorted, $compareFunc);
 
             $rangeResultBubble = $this->bubbleSort->bubbleSortStart($dataListBubble);
@@ -512,8 +543,133 @@ class AvalancheSortArrayTest extends TestCase
                 'test QuickSort: ' . $message['main']
             );
 
-            $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ,$mapperResultBubble);
+            $this->showCountingResult($message['mapper'], $mapperResult, $mapperResultQ, $mapperResultBubble);
         }
     }
 
+
+    public static function cmpLastName($a, $b)
+    {
+        return ($a['lastName'] < $b['lastName']) ? -1 : 1;
+    }
+
+
+    public static function cmpLastAndFirstName($a, $b)
+    {
+        if ($a['lastName'] < $b['lastName']) {
+            $flag = -1;
+        } else if ($a['lastName'] === $b['lastName']) {
+            if ($a['firstName'] < $b['firstName']) {
+                $flag = -1;
+            } else if ($a['firstName'] === $b['firstName']) {
+                $flag = 0;
+            } else {
+                $flag = 1;
+            }
+        } else {
+            $flag = 1;
+        }
+        return $flag;
+    }
+
+    public function testUsortUnstable()
+    {
+        $presortedFirstNameTestArray = [
+            ['firstName' => 'Arthur', 'lastName' => 'Meyer'],
+            ['firstName' => 'Arthur', 'lastName' => 'Schmidt'],
+            ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
+            ['firstName' => 'Nutella', 'lastName' => 'Schmidt'],
+        ];
+        $copyTestArray = $presortedFirstNameTestArray;
+        $expectedSorted = [
+            ['firstName' => 'Arthur', 'lastName' => 'Meyer'],
+            ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
+            ['firstName' => 'Arthur', 'lastName' => 'Schmidt'],
+            ['firstName' => 'Nutella', 'lastName' => 'Schmidt'],
+        ];
+        $disorderdSorted = [
+            ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
+            ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
+            ['firstName' => 'Arthur', 'lastName' => 'Meyer'],
+            ['firstName' => 'Nutella', 'lastName' => 'Schmidt'],
+            ['firstName' => 'Arthur', 'lastName' => 'Schmidt'],
+        ];
+
+        usort($presortedFirstNameTestArray, [AvalancheSortArrayTest::class, 'cmpLastName']);
+        usort($copyTestArray, [AvalancheSortArrayTest::class, 'cmpLastAndFirstName']);
+        $presortedFirstNameTestArrayList = "\n";
+        $copyTestArrayList = "\n";
+        foreach ($presortedFirstNameTestArray as $item) {
+            $presortedFirstNameTestArrayList .= "\n" . $item['lastName'] . ' ' . $item['firstName'];
+        }
+        foreach ($copyTestArray as $item) {
+            $copyTestArrayList .= "\n" . $item['lastName'] . ' ' . $item['firstName'];
+        }
+
+        $this->assertEquals(
+            $disorderdSorted,
+            $presortedFirstNameTestArray,
+            '1. Test for Failure: The result should get the distroted Array, because quicksort is not stable ' .
+            $presortedFirstNameTestArrayList . "\n"
+        );
+        $this->assertNotEquals(
+            $expectedSorted,
+            $presortedFirstNameTestArray,
+            '2. Test for Failure: I want to have a list sorted by Lastname and firstname, but i get a List sorted by lastname and dissorted be firstname. ' .
+            $presortedFirstNameTestArrayList . "\n"
+        );
+        $this->assertNotEquals(
+            $disorderdSorted,
+            $copyTestArray,
+            'Better Cmparefunction: Check against distorted: I will get a list sorted by lastname and firstname and would not  get a List sorted by lastname and dissorted be firstname. ' .
+            $copyTestArrayList . "\n"
+        );
+        $this->assertEquals(
+            $expectedSorted,
+            $copyTestArray,
+            'Better Cmparefunction: Check against sorted/expected: I will get a list sorted by lastname and firstname and would not  get a List sorted by lastname and dissorted be firstname. ' .
+            $copyTestArrayList . "\n" .
+            print_r($expectedSorted, true) . "\n"
+        );
+
+    }
+
+    public function testAvalancheSortStable()
+    {
+        $unsortedFirstNameTestArray = [
+            ['firstName' => 'Nutella', 'lastName' => 'Schmidt'],
+            ['firstName' => 'Arthur', 'lastName' => 'Meyer'],
+            ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
+            ['firstName' => 'Arthur', 'lastName' => 'Schmidt'],
+        ];
+        $expectedSorted = [
+            ['firstName' => 'Arthur', 'lastName' => 'Meyer'],
+            ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
+            ['firstName' => 'Arthur', 'lastName' => 'Schmidt'],
+            ['firstName' => 'Nutella', 'lastName' => 'Schmidt'],
+        ];
+
+        // Sort first with forst-name and the with lastname
+        $compareClass = new TestSimpleArrayCompare('firstName');
+        $keyList = array_keys($unsortedFirstNameTestArray);
+        $dataList = new MapperList(ArrayList::class, $keyList);
+        $dataList->setDataList($unsortedFirstNameTestArray, $compareClass);
+        $this->avalanchesort->startAvalancheSort($dataList);
+
+        $compareClass->changeTestKey('lastName');
+        $this->avalanchesort->startAvalancheSort($dataList);
+        $result = $dataList->getDataList();
+        $resultList = "\n";
+        foreach ($result as $item) {
+            $resultList .= "\n" . $item['lastName'] . ' ' . $item['firstName'];
+        }
+        $this->assertEquals(
+            $expectedSorted,
+            $result,
+            'Stable-Compare after two sort-threads: I will get a list sorted by lastname and firstname and would not  get a List sorted by lastname and dissorted be firstname. ' .
+            $resultList . "\n" .
+            print_r($expectedSorted, true) . "\n"
+        );
+
+    }
 }
