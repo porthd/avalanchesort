@@ -589,7 +589,6 @@ class AvalancheSortArrayTest extends TestCase
         ];
         $disorderdSorted = [
             ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
-            ['firstName' => 'Nutella', 'lastName' => 'Meyer'],
             ['firstName' => 'Arthur', 'lastName' => 'Meyer'],
             ['firstName' => 'Nutella', 'lastName' => 'Schmidt'],
             ['firstName' => 'Arthur', 'lastName' => 'Schmidt'],
